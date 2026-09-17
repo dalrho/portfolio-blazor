@@ -1,0 +1,368 @@
+@page "/"
+@rendermode InteractiveAuto
+@inject IJSRuntime JS
+@using MyApp.Web.Client.Models
+@using MyApp.Web.Client.Components
+
+<div>
+    <!-- Navigation Bar -->
+    <nav class="site-nav">
+        <button @onclick="@(() => NavigateTo("home"))" class="nav-brand">
+            AK
+        </button>
+        <div class="nav-links">
+            @foreach (var p in Pages)
+            {
+                <button @onclick="@(() => NavigateTo(p))"
+                        class="nav-item @(currentPage == p ? "active" : "")">
+                    [ @(p == "about" ? "ABOUT" : p.ToUpperInvariant()) ]
+                </button>
+            }
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="page-container">
+        @if (currentPage == "home")
+        {
+            <div class="anim-fade">
+                <!-- Hero Section -->
+                <section class="hero-section">
+                    <div class="watermark">01</div>
+
+                    <div class="hero-content">
+                        <p class="section-label anim-1">01 / HOME</p>
+                        <h1 class="hero-title anim-2">
+                            BUILDING AT THE<br />
+                            INTERSECTION OF<br />
+                            <span class="highlight">CODE</span> &amp; <span class="serif-italic">CULTURE</span>
+                        </h1>
+                        <p class="hero-desc anim-3">
+                            Full-stack engineer &amp; AI researcher. I build systems that feel inevitable — fast, legible, and obsessively considered. Based in San Francisco.
+                        </p>
+                        <button @onclick="@(() => NavigateTo("work"))" class="btn-accent anim-4">
+                            [ VIEW WORK ]
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Stats Grid -->
+                <section class="stats-section anim-5">
+                    <div class="stats-grid">
+                        @foreach (var stat in stats)
+                        {
+                            <div class="stat-box">
+                                <div class="stat-value">@stat.Value</div>
+                                <div class="stat-label">@stat.Label</div>
+                            </div>
+                        }
+                    </div>
+                </section>
+
+                <!-- Selected Work -->
+                <section class="content-section anim-6">
+                    <div class="section-top">
+                        <h2 class="section-heading">SELECTED WORK</h2>
+                        <button @onclick="@(() => NavigateTo("work"))" class="section-link-btn">
+                            [ VIEW ALL → ]
+                        </button>
+                    </div>
+                    <div class="cards-grid">
+                        @foreach (var project in projects.Take(4))
+                        {
+                            <ProjectCard Project="@project" />
+                        }
+                    </div>
+                </section>
+            </div>
+        }
+        else if (currentPage == "work")
+        {
+            <div class="anim-fade">
+                <!-- Work Header -->
+                <section class="work-header">
+                    <div class="watermark">02</div>
+                    <p class="section-label anim-1">02 / WORK</p>
+                    <h1 class="page-title anim-2">PROJECT<br />ARCHIVE</h1>
+
+                    <div class="filter-bar anim-3">
+                        @foreach (var f in filters)
+                        {
+                            <button @onclick="@(() => currentFilter = f)"
+                                    class="filter-btn @(currentFilter == f ? "active" : "")">
+                                [ @f ]
+                            </button>
+                        }
+                    </div>
+                </section>
+
+                <!-- Filtered Project List -->
+                <section class="archive-section anim-4">
+                    @{
+                        var filtered = currentFilter == "ALL" 
+                            ? projects 
+                            : projects.Where(p => p.Tags.Contains(currentFilter)).ToList();
+                    }
+                    @foreach (var p in filtered)
+                    {
+                        <div class="archive-row">
+                            <div class="archive-index">@p.Index</div>
+                            <div>
+                                <div class="archive-title-group">
+                                    <h3 class="archive-title">@p.Name</h3>
+                                    @foreach (var tag in p.Tags)
+                                    {
+                                        <span class="tech-tag">@tag</span>
+                                    }
+                                </div>
+                                <p class="archive-summary">@p.Summary</p>
+                                <div class="tech-inline-list">
+                                    @for (int i = 0; i < p.Tech.Length; i++)
+                                    {
+                                        var tech = p.Tech[i];
+                                        <span class="tech-inline">
+                                            @tech
+                                            @if (i < p.Tech.Length - 1)
+                                            {
+                                                <span class="tech-separator">/</span>
+                                            }
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                            <div class="archive-actions">
+                                <span class="card-year">@p.Year</span>
+                                <a href="@p.Live" class="link-primary">[ LIVE DEMO ]</a>
+                                <a href="@p.Github" class="link-secondary">[ GITHUB ]</a>
+                            </div>
+                        </div>
+                    }
+                </section>
+
+                <!-- Hackathon Log -->
+                <section class="content-section anim-5">
+                    <h2 class="section-heading">HACKATHON &amp; OPEN SOURCE LOG</h2>
+                    <p class="section-label" style="margin-top: 0.5rem; margin-bottom: 2rem;">
+                        Competition record &amp; notable contributions
+                    </p>
+                    <div class="data-table-wrap">
+                        <div class="table-header">
+                            @foreach (var h in new[] { "YEAR", "EVENT", "AWARD", "STATUS" })
+                            {
+                                <span class="table-th">@h</span>
+                            }
+                        </div>
+                        @for (int i = 0; i < hackathonLog.Length; i++)
+                        {
+                            var row = hackathonLog[i];
+                            <div class="table-data-row @(i % 2 != 0 ? "alt" : "")">
+                                <span class="card-year">@row.Year</span>
+                                <span style="font-family: var(--font-mono); color: #FFFFFF; font-size: 0.75rem;">@row.Event</span>
+                                <span class="card-year">@row.Award</span>
+                                <span class="badge @(row.Badge == "WINNER" ? "winner" : "finalist")">@row.Badge</span>
+                            </div>
+                        }
+                    </div>
+                </section>
+            </div>
+        }
+        else if (currentPage == "about")
+        {
+            <div class="anim-fade">
+                <!-- Bio & Philosophy -->
+                <section style="position: relative; overflow: hidden; border-bottom: 1px solid var(--color-border);">
+                    <div class="watermark">03</div>
+
+                    <div class="about-grid">
+                        <div class="portrait-panel anim-1">
+                            <p class="section-label">03 / ABOUT</p>
+                            <div class="portrait-box">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=760&h=950&fit=crop&auto=format"
+                                     alt="Alex Kim"
+                                     class="portrait-img" />
+                                <div class="portrait-overlay"></div>
+                            </div>
+                            <div class="portrait-meta">
+                                <div>ALEX KIM — SOFTWARE ENGINEER</div>
+                                <div>SAN FRANCISCO, CA</div>
+                                <div style="color: var(--color-accent); margin-top: 4px;">AVAILABLE FOR CONTRACT WORK</div>
+                            </div>
+                        </div>
+
+                        <div class="manifesto-panel anim-2">
+                            <h1 class="manifesto-title">
+                                CRAFT IS<br />
+                                <span class="serif-italic" style="font-family: var(--font-serif); font-style: italic; font-weight: 400;">the work.</span>
+                            </h1>
+                            <div class="manifesto-body">
+                                <p>
+                                    I've spent six years at the intersection of systems engineering and interface design —
+                                    building infrastructure that handles millions of events and products that feel inevitable
+                                    to use. I believe the best software is invisible: it disappears into the task.
+                                </p>
+                                <p>
+                                    My background in cognitive science informs how I think about interaction. Systems
+                                    should map to human mental models, not force humans to adapt to machine constraints.
+                                    This conviction drives every architectural and UX decision I make.
+                                </p>
+                                <p>
+                                    I work best in small, ambitious teams. I bring the same rigour to code review as to
+                                    user interviews — both are acts of radical attention.
+                                </p>
+                            </div>
+                            <div>
+                                <h3 class="section-label" style="margin-bottom: 1rem;">PRIMARY STACK</h3>
+                                <div class="tech-tags">
+                                    @foreach (var tech in primaryStack)
+                                    {
+                                        <span class="tech-tag" style="color: #FFF; padding: 4px 12px;">@tech</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Experience Timeline -->
+                <section class="timeline-section anim-3">
+                    <h2 class="section-heading" style="margin-bottom: 3rem;">EXPERIENCE</h2>
+                    <div>
+                        @foreach (var item in timeline)
+                        {
+                            <div class="timeline-item">
+                                <div class="timeline-year">@item.Year</div>
+                                <div>
+                                    <div class="timeline-role">@item.Role</div>
+                                    <div class="timeline-org">@item.Org</div>
+                                    <p class="timeline-desc">@item.Desc</p>
+                                </div>
+                            </div>
+                        }
+                        <div style="border-top: 1px solid var(--color-border);"></div>
+                    </div>
+                </section>
+
+                <!-- Contact Terminal -->
+                <section class="contact-section anim-4">
+                    <div class="contact-grid">
+                        <div>
+                            <h2 class="section-heading">CONTACT</h2>
+                            <p class="section-label" style="margin-top: 0.5rem; margin-bottom: 2rem;">
+                                Transmission terminal — open for new work
+                            </p>
+                            <EditForm Model="@contactForm" OnValidSubmit="HandleSubmit">
+                                <div class="form-group">
+                                    <label class="form-label">YOUR_NAME</label>
+                                    <InputText @bind-Value="contactForm.Name" required placeholder="Alex Johnson" class="custom-input" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">EMAIL_ADDR</label>
+                                    <InputText @bind-Value="contactForm.Email" type="email" required placeholder="alex@company.io" class="custom-input" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">MESSAGE</label>
+                                    <InputTextArea @bind-Value="contactForm.Message" rows="5" required placeholder="Tell me about what you're building..." class="custom-input" style="min-height: 120px; resize: vertical;" />
+                                </div>
+                                <button type="submit" class="btn-accent" style="width: 100%; display: block;">
+                                    @(isSent ? "[ MESSAGE SENT ✓ ]" : "[ TRANSMIT MESSAGE ]")
+                                </button>
+                            </EditForm>
+                        </div>
+
+                        <div class="social-links-panel">
+                            <div>
+                                <h3 class="section-label" style="margin-bottom: 1.5rem;">FIND ME ON</h3>
+                                <div>
+                                    @foreach (var s in socialLinks)
+                                    {
+                                        <a href="@s.Url" class="social-link-row">
+                                            <span class="social-link-label">@s.Label</span>
+                                            <span class="social-link-handle">@s.Handle →</span>
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                            <div class="copyright">
+                                © 2026 ALEX KIM. DESIGNED &amp; BUILT FROM SCRATCH.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        }
+    </main>
+</div>
+
+@code {
+    private string currentPage = "home";
+    private readonly string[] Pages = ["home", "work", "about"];
+    private string currentFilter = "ALL";
+    private readonly string[] filters = ["ALL", "FULL-STACK", "AI/ML", "UI/UX"];
+
+    private readonly (string Value, string Label)[] stats = [
+        ("6+", "Years of\nExperience"),
+        ("40+", "Projects\nShipped"),
+        ("5×", "Hackathon\nWinner"),
+        ("50M+", "Daily Events\nProcessed")
+    ];
+
+    private readonly string[] primaryStack = [
+        "Rust", "TypeScript", "Python", "React", "Go", "PostgreSQL", "ClickHouse", "k8s"
+    ];
+
+    private readonly ContactFormModel contactForm = new();
+    private bool isSent = false;
+
+    private async Task NavigateTo(string page)
+    {
+        currentPage = page;
+        await JS.InvokeVoidAsync("window.scrollTo", 0, 0);
+    }
+
+    private async Task HandleSubmit()
+    {
+        isSent = true;
+        await Task.Delay(3000);
+        isSent = false;
+        contactForm.Name = string.Empty;
+        contactForm.Email = string.Empty;
+        contactForm.Message = string.Empty;
+        StateHasChanged();
+    }
+
+    private readonly List<Project> projects =
+    [
+        new("001", "Meridian", "Real-time geospatial analytics platform for logistics networks. Processes 2M+ events/day with sub-50ms latency.", ["FULL-STACK", "AI/ML"], ["Rust", "React", "ClickHouse", "WebGL"], "#", "#", "2024"),
+        new("002", "Spectra UI", "Design system and component library for data-dense enterprise dashboards. 40+ production-ready components.", ["UI/UX", "FULL-STACK"], ["TypeScript", "Storybook", "Figma API", "CSS"], "#", "#", "2024"),
+        new("003", "Hollow", "Ambient music generation model trained on field recordings. Deployed via WASM for in-browser inference.", ["AI/ML"], ["Python", "PyTorch", "Rust", "WASM"], "#", "#", "2023"),
+        new("004", "Atlas Protocol", "Decentralised data provenance layer. Cryptographic attestations for AI training datasets.", ["FULL-STACK", "AI/ML"], ["Go", "Solidity", "IPFS", "gRPC"], "#", "#", "2023"),
+        new("005", "Cortex", "LLM-powered code review tool. Integrates with GitHub Actions, supports 12 languages.", ["AI/ML", "FULL-STACK"], ["Python", "FastAPI", "React", "Claude API"], "#", "#", "2023"),
+        new("006", "Fieldwork", "Field research data collection app for anthropologists. Offline-first with conflict-free sync.", ["UI/UX", "FULL-STACK"], ["React Native", "CRDTs", "SQLite", "Node.js"], "#", "#", "2022")
+    ];
+
+    private readonly HackathonRecord[] hackathonLog =
+    [
+        new("2024", "ETHGlobal NYC", "1st Place — DeFi Track", "WINNER"),
+        new("2024", "SF Hacks", "Best AI/ML Application", "WINNER"),
+        new("2023", "HackMIT", "2nd Place Overall", "FINALIST"),
+        new("2023", "Anthropic Hackathon", "Most Creative Use of Claude", "WINNER"),
+        new("2022", "TreeHacks Stanford", "Best Developer Tool", "WINNER"),
+        new("2022", "LA Hacks", "Top 10 — Open Category", "FINALIST")
+    ];
+
+    private readonly TimelineItem[] timeline =
+    [
+        new("2024—PRESENT", "Senior Software Engineer", "Stealth AI Startup", "Leading infrastructure for a multimodal AI product. Architecting real-time data pipelines processing 50M daily events."),
+        new("2022—2024", "Full-Stack Engineer", "Vercel", "Contributed to Edge Runtime and Analytics platform. Shipped features used by 200K+ developers worldwide."),
+        new("2020—2022", "CS + Cognitive Science", "UC Berkeley", "Bachelor of Science. Thesis on human-in-the-loop reinforcement learning systems. Graduated with Honours.")
+    ];
+
+    private readonly SocialLink[] socialLinks =
+    [
+        new("GITHUB", "@alexkim", "#"),
+        new("TWITTER / X", "@alexkimdev", "#"),
+        new("LINKEDIN", "in/alexkim", "#"),
+        new("READ.CV", "alexkim.cv", "#"),
+        new("EMAIL", "alex@kimdev.io", "#")
+    ];
+}
