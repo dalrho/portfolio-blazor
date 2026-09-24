@@ -7,14 +7,14 @@
 <div>
     <!-- Navigation Bar -->
     <nav class="fixed top-0 left-0 right-0 h-14 bg-canvas border-b border-border-subtle flex items-center justify-between px-8 lg:px-16 z-50">
-        <button @onclick="@(() => NavigateTo("home"))" class="font-display text-sm font-bold tracking-widest text-white bg-transparent border-none cursor-pointer uppercase transition-colors duration-150 hover:text-accent">
+        <button @onclick="@(() => NavigateTo("home"))" class="font-display text-sm font-bold tracking-[0.1em] text-white bg-transparent border-none cursor-pointer uppercase transition-colors duration-150 hover:text-accent">
             AK
         </button>
         <div class="flex items-center gap-8">
             @foreach (var p in Pages)
             {
                 <button @onclick="@(() => NavigateTo(p))"
-                        class="font-mono text-xs tracking-widest uppercase bg-transparent border-none cursor-pointer transition-colors duration-150 @(currentPage == p ? "text-accent" : "text-muted hover:text-white")">
+                        class="font-mono text-xs tracking-[0.1em] uppercase bg-transparent border-none cursor-pointer transition-colors duration-150 @(currentPage == p ? "text-accent" : "text-muted hover:text-white")">
                     [ @(p == "about" ? "ABOUT" : p.ToUpperInvariant()) ]
                 </button>
             }
@@ -25,46 +25,46 @@
     <main class="pt-14">
         @if (currentPage == "home")
         {
-            <div class="animate-fade-in">
+            <div class="anim-fade">
                 <!-- Hero Section -->
-                <section class="relative min-h-[90vh] flex flex-col justify-end px-8 py-16 lg:px-16 border-b border-border-subtle overflow-hidden">
+                <section class="relative min-h-[90vh] flex flex-col justify-end pt-24 pb-16 px-8 lg:px-16 border-b border-border-subtle overflow-hidden">
                     <div class="font-display text-border-subtle text-[clamp(6rem,20vw,18rem)] leading-none absolute top-12 -right-[0.02em] select-none font-extrabold -tracking-[0.04em] pointer-events-none">01</div>
 
-                    <div class="relative z-10 max-w-4xl">
-                        <p class="font-mono text-muted text-xs uppercase tracking-[0.15em] mb-8 animate-fade-up delay-1">01 / HOME</p>
-                        <h1 class="font-display font-extrabold leading-[0.95] -tracking-[0.03em] text-[clamp(2.5rem,7vw,6.5rem)] uppercase text-white mb-8 animate-fade-up delay-2">
+                    <div class="relative z-10 max-w-[65rem]">
+                        <p class="font-mono text-muted text-xs uppercase tracking-[0.15em] mb-8 anim-1">01 / HOME</p>
+                        <h1 class="font-display font-extrabold leading-[0.95] -tracking-[0.03em] text-[clamp(2.5rem,7vw,6.5rem)] uppercase text-white mb-8 anim-2">
                             BUILDING AT THE<br />
                             INTERSECTION OF<br />
                             <span class="text-accent">CODE</span> &amp; <span class="font-serif italic font-normal">CULTURE</span>
                         </h1>
-                        <p class="font-mono text-muted max-w-[52ch] text-sm leading-relaxed mb-12 animate-fade-up delay-3">
+                        <p class="font-mono text-muted max-w-[52ch] text-sm leading-[1.7] mb-12 anim-3">
                             Full-stack engineer &amp; AI researcher. I build systems that feel inevitable — fast, legible, and obsessively considered. Based in San Francisco.
                         </p>
-                        <button @onclick="@(() => NavigateTo("work"))" class="font-mono border border-accent bg-accent text-canvas px-8 py-3.5 text-xs tracking-[0.15em] font-bold cursor-pointer uppercase inline-block transition-colors duration-150 hover:bg-canvas hover:text-accent animate-fade-up delay-4">
+                        <button @onclick="@(() => NavigateTo("work"))" class="font-mono border border-accent bg-accent text-canvas px-8 py-3.5 text-xs tracking-[0.15em] font-bold cursor-pointer uppercase inline-block transition-colors duration-150 hover:bg-canvas hover:text-accent anim-4">
                             [ VIEW WORK ]
                         </button>
                     </div>
                 </section>
 
                 <!-- Stats Grid -->
-                <section class="border-b border-border-subtle animate-fade-up delay-5">
+                <section class="border-b border-border-subtle anim-5">
                     <div class="grid grid-cols-2 lg:grid-cols-4">
                         @for (int i = 0; i < stats.Length; i++)
                         {
                             var stat = stats[i];
-                            <div class="p-8 lg:py-10 lg:px-8 border-border-subtle @(i % 2 == 0 ? "border-r" : "") @(i < 2 ? "border-b" : "") lg:border-b-0 lg:border-r @(i == stats.Length - 1 ? "lg:border-r-0" : "")">
+                            <div class="p-8 lg:py-10 lg:px-8 border-border-subtle border-b [&:nth-child(odd)]:border-r [&:nth-child(n+3)]:border-b-0 lg:border-b-0! lg:border-r! lg:last:border-r-0!">
                                 <div class="font-display font-extrabold -tracking-[0.03em] text-white text-[clamp(2rem,5vw,3.5rem)]">@stat.Value</div>
-                                <div class="font-mono text-muted text-xs mt-2 leading-normal uppercase tracking-wider whitespace-pre-line">@stat.Label</div>
+                                <div class="font-mono text-muted text-xs mt-2 leading-[1.5] uppercase tracking-[0.1em] whitespace-pre-line">@stat.Label</div>
                             </div>
                         }
                     </div>
                 </section>
 
                 <!-- Selected Work -->
-                <section class="px-8 py-16 lg:px-16 animate-fade-up delay-6">
+                <section class="px-8 py-16 lg:px-16 anim-6">
                     <div class="flex items-baseline justify-between mb-10">
                         <h2 class="font-display font-bold -tracking-[0.02em] text-xl uppercase text-white">SELECTED WORK</h2>
-                        <button @onclick="@(() => NavigateTo("work"))" class="font-mono text-muted text-xs uppercase tracking-wider bg-transparent border-none cursor-pointer transition-colors duration-150 hover:text-accent">
+                        <button @onclick="@(() => NavigateTo("work"))" class="font-mono text-muted text-xs uppercase tracking-[0.1em] bg-transparent border-none cursor-pointer transition-colors duration-150 hover:text-accent">
                             [ VIEW ALL → ]
                         </button>
                     </div>
@@ -79,14 +79,14 @@
         }
         else if (currentPage == "work")
         {
-            <div class="animate-fade-in">
+            <div class="anim-fade">
                 <!-- Work Header -->
                 <section class="relative px-8 pt-20 pb-12 lg:px-16 border-b border-border-subtle overflow-hidden">
                     <div class="font-display text-border-subtle text-[clamp(6rem,20vw,18rem)] leading-none absolute top-12 -right-[0.02em] select-none font-extrabold -tracking-[0.04em] pointer-events-none">02</div>
-                    <p class="font-mono text-muted text-xs uppercase tracking-[0.15em] mb-8 animate-fade-up delay-1">02 / WORK</p>
-                    <h1 class="font-display font-extrabold -tracking-[0.03em] text-[clamp(2.5rem,5vw,3.75rem)] text-white uppercase mb-10 animate-fade-up delay-2">PROJECT<br />ARCHIVE</h1>
+                    <p class="font-mono text-muted text-xs uppercase tracking-[0.15em] mb-8 anim-1">02 / WORK</p>
+                    <h1 class="font-display font-extrabold -tracking-[0.03em] text-[clamp(2.5rem,5vw,3.75rem)] text-white uppercase mb-10 anim-2">PROJECT<br />ARCHIVE</h1>
 
-                    <div class="flex flex-wrap gap-3 animate-fade-up delay-3">
+                    <div class="flex flex-wrap gap-3 anim-3">
                         @foreach (var f in filters)
                         {
                             <button @onclick="@(() => currentFilter = f)"
@@ -98,7 +98,7 @@
                 </section>
 
                 <!-- Filtered Project List -->
-                <section class="border-b border-border-subtle animate-fade-up delay-4">
+                <section class="border-b border-border-subtle anim-4">
                     @{
                         var filtered = currentFilter == "ALL" 
                             ? projects 
@@ -113,15 +113,15 @@
                                     <h3 class="font-display font-bold -tracking-[0.02em] text-xl text-white uppercase">@p.Name</h3>
                                     @foreach (var tag in p.Tags)
                                     {
-                                        <span class="font-mono border border-border-subtle text-muted px-2 py-0.5 text-[0.65rem] tracking-widest uppercase">@tag</span>
+                                        <span class="font-mono border border-border-subtle text-muted px-2 py-0.5 text-[0.65rem] tracking-[0.1em] uppercase">@tag</span>
                                     }
                                 </div>
-                                <p class="font-mono text-muted max-w-[60ch] text-xs leading-relaxed mb-4">@p.Summary</p>
+                                <p class="font-mono text-muted max-w-[60ch] text-xs leading-[1.6] mb-4">@p.Summary</p>
                                 <div class="flex flex-wrap gap-2">
                                     @for (int i = 0; i < p.Tech.Length; i++)
                                     {
                                         var tech = p.Tech[i];
-                                        <span class="font-mono text-muted text-[0.65rem] tracking-wider uppercase">
+                                        <span class="font-mono text-muted text-[0.65rem] tracking-[0.08em] uppercase">
                                             @tech
                                             @if (i < p.Tech.Length - 1)
                                             {
@@ -133,15 +133,15 @@
                             </div>
                             <div class="flex flex-col items-start lg:items-end gap-2">
                                 <span class="font-mono text-muted text-xs">@p.Year</span>
-                                <a href="@p.Live" class="font-mono text-xs uppercase tracking-wider text-accent no-underline hover:underline">[ LIVE DEMO ]</a>
-                                <a href="@p.Github" class="font-mono text-xs uppercase tracking-wider text-muted no-underline transition-colors duration-150 hover:text-white">[ GITHUB ]</a>
+                                <a href="@p.Live" class="font-mono text-xs uppercase tracking-[0.1em] text-accent no-underline hover:underline">[ LIVE DEMO ]</a>
+                                <a href="@p.Github" class="font-mono text-xs uppercase tracking-[0.1em] text-muted no-underline transition-colors duration-150 hover:text-white">[ GITHUB ]</a>
                             </div>
                         </div>
                     }
                 </section>
 
                 <!-- Hackathon Log -->
-                <section class="px-8 py-16 lg:px-16 animate-fade-up delay-5">
+                <section class="px-8 py-16 lg:px-16 anim-5">
                     <h2 class="font-display font-bold -tracking-[0.02em] text-xl uppercase text-white">HACKATHON &amp; OPEN SOURCE LOG</h2>
                     <p class="font-mono text-muted text-xs uppercase tracking-[0.15em] mt-2 mb-8">
                         Competition record &amp; notable contributions
@@ -150,7 +150,7 @@
                         <div class="grid grid-cols-[80px_1fr_1fr_auto] items-center gap-4 px-6 py-3 border-b border-border-subtle bg-surface">
                             @foreach (var h in new[] { "YEAR", "EVENT", "AWARD", "STATUS" })
                             {
-                                <span class="font-mono text-muted text-xs uppercase tracking-wider">@h</span>
+                                <span class="font-mono text-muted text-xs uppercase tracking-[0.1em]">@h</span>
                             }
                         </div>
                         @for (int i = 0; i < hackathonLog.Length; i++)
@@ -160,7 +160,7 @@
                                 <span class="font-mono text-muted text-xs">@row.Year</span>
                                 <span class="font-mono text-white text-xs">@row.Event</span>
                                 <span class="font-mono text-muted text-xs">@row.Award</span>
-                                <span class="font-mono text-[0.6rem] tracking-wider uppercase font-bold px-2 py-0.5 whitespace-nowrap @(row.Badge == "WINNER" ? "bg-accent text-canvas" : "border border-muted text-muted bg-transparent")">@row.Badge</span>
+                                <span class="font-mono text-[0.6rem] tracking-[0.1em] uppercase font-bold px-2 py-0.5 whitespace-nowrap @(row.Badge == "WINNER" ? "bg-accent text-canvas" : "border border-muted text-muted bg-transparent")">@row.Badge</span>
                             </div>
                         }
                     </div>
@@ -169,13 +169,13 @@
         }
         else if (currentPage == "about")
         {
-            <div class="animate-fade-in">
+            <div class="anim-fade">
                 <!-- Bio & Philosophy -->
                 <section class="relative overflow-hidden border-b border-border-subtle">
                     <div class="font-display text-border-subtle text-[clamp(6rem,20vw,18rem)] leading-none absolute top-12 -right-[0.02em] select-none font-extrabold -tracking-[0.04em] pointer-events-none">03</div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 border-b border-border-subtle">
-                        <div class="p-8 lg:p-16 border-b lg:border-b-0 lg:border-r border-border-subtle flex flex-col justify-end animate-fade-up delay-1">
+                        <div class="p-8 lg:p-16 border-b lg:border-b-0 lg:border-r border-border-subtle flex flex-col justify-end anim-1">
                             <p class="font-mono text-muted text-xs uppercase tracking-[0.15em] mb-8">03 / ABOUT</p>
                             <div class="relative border border-border-subtle aspect-[4/5] max-w-[380px] overflow-hidden mb-8">
                                 <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=760&h=950&fit=crop&auto=format"
@@ -183,14 +183,14 @@
                                      class="w-full h-full object-cover block grayscale-[0.3] contrast-[1.05]" />
                                 <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/40 to-transparent pointer-events-none"></div>
                             </div>
-                            <div class="font-mono text-muted text-xs leading-relaxed">
+                            <div class="font-mono text-muted text-xs leading-[1.6]">
                                 <div>ALEX KIM — SOFTWARE ENGINEER</div>
                                 <div>SAN FRANCISCO, CA</div>
                                 <div class="text-accent mt-1">AVAILABLE FOR CONTRACT WORK</div>
                             </div>
                         </div>
 
-                        <div class="p-8 lg:p-16 animate-fade-up delay-2">
+                        <div class="p-8 lg:p-16 anim-2">
                             <h1 class="font-display font-extrabold -tracking-[0.03em] text-[clamp(2rem,4vw,3.5rem)] uppercase text-white leading-none mb-8">
                                 CRAFT IS<br />
                                 <span class="font-serif italic font-normal">the work.</span>
@@ -216,7 +216,7 @@
                                 <div class="flex flex-wrap gap-2">
                                     @foreach (var tech in primaryStack)
                                     {
-                                        <span class="font-mono border border-border-subtle text-white px-3 py-1 text-[0.65rem] tracking-widest uppercase">@tech</span>
+                                        <span class="font-mono border border-border-subtle text-white px-3 py-1 text-[0.65rem] tracking-[0.1em] uppercase">@tech</span>
                                     }
                                 </div>
                             </div>
@@ -225,7 +225,7 @@
                 </section>
 
                 <!-- Experience Timeline -->
-                <section class="px-8 py-16 lg:px-16 border-b border-border-subtle animate-fade-up delay-3">
+                <section class="px-8 py-16 lg:px-16 border-b border-border-subtle anim-3">
                     <h2 class="font-display font-bold -tracking-[0.02em] text-xl uppercase text-white mb-12">EXPERIENCE</h2>
                     <div>
                         @foreach (var item in timeline)
@@ -234,8 +234,8 @@
                                 <div class="font-display font-extrabold -tracking-[0.03em] text-white text-[clamp(1.25rem,2vw,1.75rem)]">@item.Year</div>
                                 <div>
                                     <div class="font-display font-bold text-white text-lg uppercase mb-1">@item.Role</div>
-                                    <div class="font-mono text-accent text-xs uppercase tracking-wider mb-4">@item.Org</div>
-                                    <p class="font-mono text-muted max-w-[56ch] text-xs leading-relaxed">@item.Desc</p>
+                                    <div class="font-mono text-accent text-xs uppercase tracking-[0.1em] mb-4">@item.Org</div>
+                                    <p class="font-mono text-muted max-w-[56ch] text-xs leading-[1.6]">@item.Desc</p>
                                 </div>
                             </div>
                         }
@@ -244,7 +244,7 @@
                 </section>
 
                 <!-- Contact Terminal -->
-                <section class="px-8 py-16 lg:px-16 animate-fade-up delay-4">
+                <section class="px-8 py-16 lg:px-16 anim-4">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
                         <div>
                             <h2 class="font-display font-bold -tracking-[0.02em] text-xl uppercase text-white">CONTACT</h2>
@@ -253,15 +253,15 @@
                             </p>
                             <EditForm Model="@contactForm" OnValidSubmit="HandleSubmit">
                                 <div class="mb-4">
-                                    <label class="block font-mono text-muted text-xs uppercase tracking-wider mb-2">YOUR_NAME</label>
+                                    <label class="block font-mono text-muted text-xs uppercase tracking-[0.1em] mb-2">YOUR_NAME</label>
                                     <InputText @bind-Value="contactForm.Name" required placeholder="Alex Johnson" class="font-mono bg-surface border border-border-subtle text-white px-4 py-3 text-sm w-full outline-none transition-colors duration-150 focus:border-accent placeholder:text-dim" />
                                 </div>
                                 <div class="mb-4">
-                                    <label class="block font-mono text-muted text-xs uppercase tracking-wider mb-2">EMAIL_ADDR</label>
+                                    <label class="block font-mono text-muted text-xs uppercase tracking-[0.1em] mb-2">EMAIL_ADDR</label>
                                     <InputText @bind-Value="contactForm.Email" type="email" required placeholder="alex@company.io" class="font-mono bg-surface border border-border-subtle text-white px-4 py-3 text-sm w-full outline-none transition-colors duration-150 focus:border-accent placeholder:text-dim" />
                                 </div>
                                 <div class="mb-4">
-                                    <label class="block font-mono text-muted text-xs uppercase tracking-wider mb-2">MESSAGE</label>
+                                    <label class="block font-mono text-muted text-xs uppercase tracking-[0.1em] mb-2">MESSAGE</label>
                                     <InputTextArea @bind-Value="contactForm.Message" rows="5" required placeholder="Tell me about what you're building..." class="font-mono bg-surface border border-border-subtle text-white px-4 py-3 text-sm w-full outline-none transition-colors duration-150 focus:border-accent placeholder:text-dim min-h-[120px] resize-y" />
                                 </div>
                                 <button type="submit" class="font-mono border border-accent bg-accent text-canvas px-8 py-3.5 text-xs tracking-[0.15em] font-bold cursor-pointer uppercase w-full block transition-colors duration-150 hover:bg-canvas hover:text-accent">
@@ -277,7 +277,7 @@
                                     @foreach (var s in socialLinks)
                                     {
                                         <a href="@s.Url" class="flex justify-between items-center py-4 border-t border-border-subtle last:border-b last:border-border-subtle no-underline group">
-                                            <span class="font-mono text-muted text-xs uppercase tracking-wider transition-colors duration-150 group-hover:text-white">@s.Label</span>
+                                            <span class="font-mono text-muted text-xs uppercase tracking-[0.1em] transition-colors duration-150 group-hover:text-white">@s.Label</span>
                                             <span class="font-mono text-white text-xs transition-colors duration-150 group-hover:text-accent">@s.Handle →</span>
                                         </a>
                                     }
