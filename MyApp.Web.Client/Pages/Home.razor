@@ -6,15 +6,15 @@
 
 <div>
     <!-- Navigation Bar -->
-    <nav class="site-nav">
-        <button @onclick="@(() => NavigateTo("home"))" class="nav-brand">
+    <nav class="fixed top-0 left-0 right-0 h-14 bg-canvas border-b border-border-subtle flex items-center justify-between px-8 lg:px-16 z-50">
+        <button @onclick="@(() => NavigateTo("home"))" class="font-display text-sm font-bold tracking-widest text-white bg-transparent border-none cursor-pointer uppercase transition-colors duration-150 hover:text-accent">
             AK
         </button>
-        <div class="nav-links">
+        <div class="flex items-center gap-8">
             @foreach (var p in Pages)
             {
                 <button @onclick="@(() => NavigateTo(p))"
-                        class="nav-item @(currentPage == p ? "active" : "")">
+                        class="font-mono text-xs tracking-widest uppercase bg-transparent border-none cursor-pointer transition-colors duration-150 @(currentPage == p ? "text-accent" : "text-muted hover:text-white")">
                     [ @(p == "about" ? "ABOUT" : p.ToUpperInvariant()) ]
                 </button>
             }
@@ -22,52 +22,53 @@
     </nav>
 
     <!-- Main Content Area -->
-    <main class="page-container">
+    <main class="pt-14">
         @if (currentPage == "home")
         {
-            <div class="anim-fade">
+            <div class="animate-fade-in">
                 <!-- Hero Section -->
-                <section class="hero-section">
-                    <div class="watermark">01</div>
+                <section class="relative min-h-[90vh] flex flex-col justify-end px-8 py-16 lg:px-16 border-b border-border-subtle overflow-hidden">
+                    <div class="font-display text-border-subtle text-[clamp(6rem,20vw,18rem)] leading-none absolute top-12 -right-[0.02em] select-none font-extrabold -tracking-[0.04em] pointer-events-none">01</div>
 
-                    <div class="hero-content">
-                        <p class="section-label anim-1">01 / HOME</p>
-                        <h1 class="hero-title anim-2">
+                    <div class="relative z-10 max-w-4xl">
+                        <p class="font-mono text-muted text-xs uppercase tracking-[0.15em] mb-8 animate-fade-up delay-1">01 / HOME</p>
+                        <h1 class="font-display font-extrabold leading-[0.95] -tracking-[0.03em] text-[clamp(2.5rem,7vw,6.5rem)] uppercase text-white mb-8 animate-fade-up delay-2">
                             BUILDING AT THE<br />
                             INTERSECTION OF<br />
-                            <span class="highlight">CODE</span> &amp; <span class="serif-italic">CULTURE</span>
+                            <span class="text-accent">CODE</span> &amp; <span class="font-serif italic font-normal">CULTURE</span>
                         </h1>
-                        <p class="hero-desc anim-3">
+                        <p class="font-mono text-muted max-w-[52ch] text-sm leading-relaxed mb-12 animate-fade-up delay-3">
                             Full-stack engineer &amp; AI researcher. I build systems that feel inevitable — fast, legible, and obsessively considered. Based in San Francisco.
                         </p>
-                        <button @onclick="@(() => NavigateTo("work"))" class="btn-accent anim-4">
+                        <button @onclick="@(() => NavigateTo("work"))" class="font-mono border border-accent bg-accent text-canvas px-8 py-3.5 text-xs tracking-[0.15em] font-bold cursor-pointer uppercase inline-block transition-colors duration-150 hover:bg-canvas hover:text-accent animate-fade-up delay-4">
                             [ VIEW WORK ]
                         </button>
                     </div>
                 </section>
 
                 <!-- Stats Grid -->
-                <section class="stats-section anim-5">
-                    <div class="stats-grid">
-                        @foreach (var stat in stats)
+                <section class="border-b border-border-subtle animate-fade-up delay-5">
+                    <div class="grid grid-cols-2 lg:grid-cols-4">
+                        @for (int i = 0; i < stats.Length; i++)
                         {
-                            <div class="stat-box">
-                                <div class="stat-value">@stat.Value</div>
-                                <div class="stat-label">@stat.Label</div>
+                            var stat = stats[i];
+                            <div class="p-8 lg:py-10 lg:px-8 border-border-subtle @(i % 2 == 0 ? "border-r" : "") @(i < 2 ? "border-b" : "") lg:border-b-0 lg:border-r @(i == stats.Length - 1 ? "lg:border-r-0" : "")">
+                                <div class="font-display font-extrabold -tracking-[0.03em] text-white text-[clamp(2rem,5vw,3.5rem)]">@stat.Value</div>
+                                <div class="font-mono text-muted text-xs mt-2 leading-normal uppercase tracking-wider whitespace-pre-line">@stat.Label</div>
                             </div>
                         }
                     </div>
                 </section>
 
                 <!-- Selected Work -->
-                <section class="content-section anim-6">
-                    <div class="section-top">
-                        <h2 class="section-heading">SELECTED WORK</h2>
-                        <button @onclick="@(() => NavigateTo("work"))" class="section-link-btn">
+                <section class="px-8 py-16 lg:px-16 animate-fade-up delay-6">
+                    <div class="flex items-baseline justify-between mb-10">
+                        <h2 class="font-display font-bold -tracking-[0.02em] text-xl uppercase text-white">SELECTED WORK</h2>
+                        <button @onclick="@(() => NavigateTo("work"))" class="font-mono text-muted text-xs uppercase tracking-wider bg-transparent border-none cursor-pointer transition-colors duration-150 hover:text-accent">
                             [ VIEW ALL → ]
                         </button>
                     </div>
-                    <div class="cards-grid">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         @foreach (var project in projects.Take(4))
                         {
                             <ProjectCard Project="@project" />
@@ -78,18 +79,18 @@
         }
         else if (currentPage == "work")
         {
-            <div class="anim-fade">
+            <div class="animate-fade-in">
                 <!-- Work Header -->
-                <section class="work-header">
-                    <div class="watermark">02</div>
-                    <p class="section-label anim-1">02 / WORK</p>
-                    <h1 class="page-title anim-2">PROJECT<br />ARCHIVE</h1>
+                <section class="relative px-8 pt-20 pb-12 lg:px-16 border-b border-border-subtle overflow-hidden">
+                    <div class="font-display text-border-subtle text-[clamp(6rem,20vw,18rem)] leading-none absolute top-12 -right-[0.02em] select-none font-extrabold -tracking-[0.04em] pointer-events-none">02</div>
+                    <p class="font-mono text-muted text-xs uppercase tracking-[0.15em] mb-8 animate-fade-up delay-1">02 / WORK</p>
+                    <h1 class="font-display font-extrabold -tracking-[0.03em] text-[clamp(2.5rem,5vw,3.75rem)] text-white uppercase mb-10 animate-fade-up delay-2">PROJECT<br />ARCHIVE</h1>
 
-                    <div class="filter-bar anim-3">
+                    <div class="flex flex-wrap gap-3 animate-fade-up delay-3">
                         @foreach (var f in filters)
                         {
                             <button @onclick="@(() => currentFilter = f)"
-                                    class="filter-btn @(currentFilter == f ? "active" : "")">
+                                    class="font-mono border px-5 py-2 text-[0.7rem] tracking-[0.12em] cursor-pointer uppercase transition-all duration-150 @(currentFilter == f ? "border-accent bg-accent text-canvas" : "border-border-subtle bg-transparent text-muted hover:border-white hover:text-white")">
                                 [ @f ]
                             </button>
                         }
@@ -97,7 +98,7 @@
                 </section>
 
                 <!-- Filtered Project List -->
-                <section class="archive-section anim-4">
+                <section class="border-b border-border-subtle animate-fade-up delay-4">
                     @{
                         var filtered = currentFilter == "ALL" 
                             ? projects 
@@ -105,61 +106,61 @@
                     }
                     @foreach (var p in filtered)
                     {
-                        <div class="archive-row">
-                            <div class="archive-index">@p.Index</div>
+                        <div class="flex flex-col lg:grid lg:grid-cols-[80px_1fr_auto] lg:items-start gap-6 p-8 lg:px-16 border-b border-border-subtle last:border-b-0 bg-transparent transition-colors duration-150 hover:bg-surface">
+                            <div class="font-mono text-accent text-sm font-bold pt-1">@p.Index</div>
                             <div>
-                                <div class="archive-title-group">
-                                    <h3 class="archive-title">@p.Name</h3>
+                                <div class="flex items-center gap-4 flex-wrap mb-2">
+                                    <h3 class="font-display font-bold -tracking-[0.02em] text-xl text-white uppercase">@p.Name</h3>
                                     @foreach (var tag in p.Tags)
                                     {
-                                        <span class="tech-tag">@tag</span>
+                                        <span class="font-mono border border-border-subtle text-muted px-2 py-0.5 text-[0.65rem] tracking-widest uppercase">@tag</span>
                                     }
                                 </div>
-                                <p class="archive-summary">@p.Summary</p>
-                                <div class="tech-inline-list">
+                                <p class="font-mono text-muted max-w-[60ch] text-xs leading-relaxed mb-4">@p.Summary</p>
+                                <div class="flex flex-wrap gap-2">
                                     @for (int i = 0; i < p.Tech.Length; i++)
                                     {
                                         var tech = p.Tech[i];
-                                        <span class="tech-inline">
+                                        <span class="font-mono text-muted text-[0.65rem] tracking-wider uppercase">
                                             @tech
                                             @if (i < p.Tech.Length - 1)
                                             {
-                                                <span class="tech-separator">/</span>
+                                                <span class="ml-2 text-border-subtle">/</span>
                                             }
                                         </span>
                                     }
                                 </div>
                             </div>
-                            <div class="archive-actions">
-                                <span class="card-year">@p.Year</span>
-                                <a href="@p.Live" class="link-primary">[ LIVE DEMO ]</a>
-                                <a href="@p.Github" class="link-secondary">[ GITHUB ]</a>
+                            <div class="flex flex-col items-start lg:items-end gap-2">
+                                <span class="font-mono text-muted text-xs">@p.Year</span>
+                                <a href="@p.Live" class="font-mono text-xs uppercase tracking-wider text-accent no-underline hover:underline">[ LIVE DEMO ]</a>
+                                <a href="@p.Github" class="font-mono text-xs uppercase tracking-wider text-muted no-underline transition-colors duration-150 hover:text-white">[ GITHUB ]</a>
                             </div>
                         </div>
                     }
                 </section>
 
                 <!-- Hackathon Log -->
-                <section class="content-section anim-5">
-                    <h2 class="section-heading">HACKATHON &amp; OPEN SOURCE LOG</h2>
-                    <p class="section-label" style="margin-top: 0.5rem; margin-bottom: 2rem;">
+                <section class="px-8 py-16 lg:px-16 animate-fade-up delay-5">
+                    <h2 class="font-display font-bold -tracking-[0.02em] text-xl uppercase text-white">HACKATHON &amp; OPEN SOURCE LOG</h2>
+                    <p class="font-mono text-muted text-xs uppercase tracking-[0.15em] mt-2 mb-8">
                         Competition record &amp; notable contributions
                     </p>
-                    <div class="data-table-wrap">
-                        <div class="table-header">
+                    <div class="border border-border-subtle overflow-hidden mt-8">
+                        <div class="grid grid-cols-[80px_1fr_1fr_auto] items-center gap-4 px-6 py-3 border-b border-border-subtle bg-surface">
                             @foreach (var h in new[] { "YEAR", "EVENT", "AWARD", "STATUS" })
                             {
-                                <span class="table-th">@h</span>
+                                <span class="font-mono text-muted text-xs uppercase tracking-wider">@h</span>
                             }
                         </div>
                         @for (int i = 0; i < hackathonLog.Length; i++)
                         {
                             var row = hackathonLog[i];
-                            <div class="table-data-row @(i % 2 != 0 ? "alt" : "")">
-                                <span class="card-year">@row.Year</span>
-                                <span style="font-family: var(--font-mono); color: #FFFFFF; font-size: 0.75rem;">@row.Event</span>
-                                <span class="card-year">@row.Award</span>
-                                <span class="badge @(row.Badge == "WINNER" ? "winner" : "finalist")">@row.Badge</span>
+                            <div class="grid grid-cols-[80px_1fr_1fr_auto] items-center gap-4 px-6 py-4 border-b border-border-subtle last:border-b-0 @(i % 2 != 0 ? "bg-surface-alt" : "")">
+                                <span class="font-mono text-muted text-xs">@row.Year</span>
+                                <span class="font-mono text-white text-xs">@row.Event</span>
+                                <span class="font-mono text-muted text-xs">@row.Award</span>
+                                <span class="font-mono text-[0.6rem] tracking-wider uppercase font-bold px-2 py-0.5 whitespace-nowrap @(row.Badge == "WINNER" ? "bg-accent text-canvas" : "border border-muted text-muted bg-transparent")">@row.Badge</span>
                             </div>
                         }
                     </div>
@@ -168,33 +169,33 @@
         }
         else if (currentPage == "about")
         {
-            <div class="anim-fade">
+            <div class="animate-fade-in">
                 <!-- Bio & Philosophy -->
-                <section style="position: relative; overflow: hidden; border-bottom: 1px solid var(--color-border);">
-                    <div class="watermark">03</div>
+                <section class="relative overflow-hidden border-b border-border-subtle">
+                    <div class="font-display text-border-subtle text-[clamp(6rem,20vw,18rem)] leading-none absolute top-12 -right-[0.02em] select-none font-extrabold -tracking-[0.04em] pointer-events-none">03</div>
 
-                    <div class="about-grid">
-                        <div class="portrait-panel anim-1">
-                            <p class="section-label">03 / ABOUT</p>
-                            <div class="portrait-box">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 border-b border-border-subtle">
+                        <div class="p-8 lg:p-16 border-b lg:border-b-0 lg:border-r border-border-subtle flex flex-col justify-end animate-fade-up delay-1">
+                            <p class="font-mono text-muted text-xs uppercase tracking-[0.15em] mb-8">03 / ABOUT</p>
+                            <div class="relative border border-border-subtle aspect-[4/5] max-w-[380px] overflow-hidden mb-8">
                                 <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=760&h=950&fit=crop&auto=format"
                                      alt="Alex Kim"
-                                     class="portrait-img" />
-                                <div class="portrait-overlay"></div>
+                                     class="w-full h-full object-cover block grayscale-[0.3] contrast-[1.05]" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/40 to-transparent pointer-events-none"></div>
                             </div>
-                            <div class="portrait-meta">
+                            <div class="font-mono text-muted text-xs leading-relaxed">
                                 <div>ALEX KIM — SOFTWARE ENGINEER</div>
                                 <div>SAN FRANCISCO, CA</div>
-                                <div style="color: var(--color-accent); margin-top: 4px;">AVAILABLE FOR CONTRACT WORK</div>
+                                <div class="text-accent mt-1">AVAILABLE FOR CONTRACT WORK</div>
                             </div>
                         </div>
 
-                        <div class="manifesto-panel anim-2">
-                            <h1 class="manifesto-title">
+                        <div class="p-8 lg:p-16 animate-fade-up delay-2">
+                            <h1 class="font-display font-extrabold -tracking-[0.03em] text-[clamp(2rem,4vw,3.5rem)] uppercase text-white leading-none mb-8">
                                 CRAFT IS<br />
-                                <span class="serif-italic" style="font-family: var(--font-serif); font-style: italic; font-weight: 400;">the work.</span>
+                                <span class="font-serif italic font-normal">the work.</span>
                             </h1>
-                            <div class="manifesto-body">
+                            <div class="font-mono text-muted text-xs leading-[1.8] mb-10 space-y-5">
                                 <p>
                                     I've spent six years at the intersection of systems engineering and interface design —
                                     building infrastructure that handles millions of events and products that feel inevitable
@@ -211,11 +212,11 @@
                                 </p>
                             </div>
                             <div>
-                                <h3 class="section-label" style="margin-bottom: 1rem;">PRIMARY STACK</h3>
-                                <div class="tech-tags">
+                                <h3 class="font-mono text-muted text-xs uppercase tracking-[0.15em] mb-4">PRIMARY STACK</h3>
+                                <div class="flex flex-wrap gap-2">
                                     @foreach (var tech in primaryStack)
                                     {
-                                        <span class="tech-tag" style="color: #FFF; padding: 4px 12px;">@tech</span>
+                                        <span class="font-mono border border-border-subtle text-white px-3 py-1 text-[0.65rem] tracking-widest uppercase">@tech</span>
                                     }
                                 </div>
                             </div>
@@ -224,65 +225,65 @@
                 </section>
 
                 <!-- Experience Timeline -->
-                <section class="timeline-section anim-3">
-                    <h2 class="section-heading" style="margin-bottom: 3rem;">EXPERIENCE</h2>
+                <section class="px-8 py-16 lg:px-16 border-b border-border-subtle animate-fade-up delay-3">
+                    <h2 class="font-display font-bold -tracking-[0.02em] text-xl uppercase text-white mb-12">EXPERIENCE</h2>
                     <div>
                         @foreach (var item in timeline)
                         {
-                            <div class="timeline-item">
-                                <div class="timeline-year">@item.Year</div>
+                            <div class="flex flex-col lg:grid lg:grid-cols-[280px_1fr] gap-6 py-10 border-t border-border-subtle">
+                                <div class="font-display font-extrabold -tracking-[0.03em] text-white text-[clamp(1.25rem,2vw,1.75rem)]">@item.Year</div>
                                 <div>
-                                    <div class="timeline-role">@item.Role</div>
-                                    <div class="timeline-org">@item.Org</div>
-                                    <p class="timeline-desc">@item.Desc</p>
+                                    <div class="font-display font-bold text-white text-lg uppercase mb-1">@item.Role</div>
+                                    <div class="font-mono text-accent text-xs uppercase tracking-wider mb-4">@item.Org</div>
+                                    <p class="font-mono text-muted max-w-[56ch] text-xs leading-relaxed">@item.Desc</p>
                                 </div>
                             </div>
                         }
-                        <div style="border-top: 1px solid var(--color-border);"></div>
+                        <div class="border-t border-border-subtle"></div>
                     </div>
                 </section>
 
                 <!-- Contact Terminal -->
-                <section class="contact-section anim-4">
-                    <div class="contact-grid">
+                <section class="px-8 py-16 lg:px-16 animate-fade-up delay-4">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
                         <div>
-                            <h2 class="section-heading">CONTACT</h2>
-                            <p class="section-label" style="margin-top: 0.5rem; margin-bottom: 2rem;">
+                            <h2 class="font-display font-bold -tracking-[0.02em] text-xl uppercase text-white">CONTACT</h2>
+                            <p class="font-mono text-muted text-xs uppercase tracking-[0.15em] mt-2 mb-8">
                                 Transmission terminal — open for new work
                             </p>
                             <EditForm Model="@contactForm" OnValidSubmit="HandleSubmit">
-                                <div class="form-group">
-                                    <label class="form-label">YOUR_NAME</label>
-                                    <InputText @bind-Value="contactForm.Name" required placeholder="Alex Johnson" class="custom-input" />
+                                <div class="mb-4">
+                                    <label class="block font-mono text-muted text-xs uppercase tracking-wider mb-2">YOUR_NAME</label>
+                                    <InputText @bind-Value="contactForm.Name" required placeholder="Alex Johnson" class="font-mono bg-surface border border-border-subtle text-white px-4 py-3 text-sm w-full outline-none transition-colors duration-150 focus:border-accent placeholder:text-dim" />
                                 </div>
-                                <div class="form-group">
-                                    <label class="form-label">EMAIL_ADDR</label>
-                                    <InputText @bind-Value="contactForm.Email" type="email" required placeholder="alex@company.io" class="custom-input" />
+                                <div class="mb-4">
+                                    <label class="block font-mono text-muted text-xs uppercase tracking-wider mb-2">EMAIL_ADDR</label>
+                                    <InputText @bind-Value="contactForm.Email" type="email" required placeholder="alex@company.io" class="font-mono bg-surface border border-border-subtle text-white px-4 py-3 text-sm w-full outline-none transition-colors duration-150 focus:border-accent placeholder:text-dim" />
                                 </div>
-                                <div class="form-group">
-                                    <label class="form-label">MESSAGE</label>
-                                    <InputTextArea @bind-Value="contactForm.Message" rows="5" required placeholder="Tell me about what you're building..." class="custom-input" style="min-height: 120px; resize: vertical;" />
+                                <div class="mb-4">
+                                    <label class="block font-mono text-muted text-xs uppercase tracking-wider mb-2">MESSAGE</label>
+                                    <InputTextArea @bind-Value="contactForm.Message" rows="5" required placeholder="Tell me about what you're building..." class="font-mono bg-surface border border-border-subtle text-white px-4 py-3 text-sm w-full outline-none transition-colors duration-150 focus:border-accent placeholder:text-dim min-h-[120px] resize-y" />
                                 </div>
-                                <button type="submit" class="btn-accent" style="width: 100%; display: block;">
+                                <button type="submit" class="font-mono border border-accent bg-accent text-canvas px-8 py-3.5 text-xs tracking-[0.15em] font-bold cursor-pointer uppercase w-full block transition-colors duration-150 hover:bg-canvas hover:text-accent">
                                     @(isSent ? "[ MESSAGE SENT ✓ ]" : "[ TRANSMIT MESSAGE ]")
                                 </button>
                             </EditForm>
                         </div>
 
-                        <div class="social-links-panel">
+                        <div class="flex flex-col justify-between">
                             <div>
-                                <h3 class="section-label" style="margin-bottom: 1.5rem;">FIND ME ON</h3>
+                                <h3 class="font-mono text-muted text-xs uppercase tracking-[0.15em] mb-6">FIND ME ON</h3>
                                 <div>
                                     @foreach (var s in socialLinks)
                                     {
-                                        <a href="@s.Url" class="social-link-row">
-                                            <span class="social-link-label">@s.Label</span>
-                                            <span class="social-link-handle">@s.Handle →</span>
+                                        <a href="@s.Url" class="flex justify-between items-center py-4 border-t border-border-subtle last:border-b last:border-border-subtle no-underline group">
+                                            <span class="font-mono text-muted text-xs uppercase tracking-wider transition-colors duration-150 group-hover:text-white">@s.Label</span>
+                                            <span class="font-mono text-white text-xs transition-colors duration-150 group-hover:text-accent">@s.Handle →</span>
                                         </a>
                                     }
                                 </div>
                             </div>
-                            <div class="copyright">
+                            <div class="font-mono text-dim text-xs mt-12">
                                 © 2026 ALEX KIM. DESIGNED &amp; BUILT FROM SCRATCH.
                             </div>
                         </div>

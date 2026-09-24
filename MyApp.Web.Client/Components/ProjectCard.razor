@@ -1,37 +1,39 @@
 @using MyApp.Web.Client.Models
 
-<div class="project-card">
-    <div class="card-top">
-        <span class="card-index">
-            @Project.Index
-        </span>
-        <span class="card-year">
-            @Project.Year
-        </span>
-    </div>
-    
-    <h3 class="card-title">
-        @Project.Name
-    </h3>
-    
-    <p class="card-summary">
-        @Project.Summary
-    </p>
-    
-    <div class="tech-tags">
-        @foreach (var tech in Project.Tech)
-        {
-            <span class="tech-tag">
-                @tech
+<div class="border border-border-subtle bg-surface p-6 transition-colors duration-150 hover:border-accent flex flex-col justify-between">
+    <div>
+        <div class="flex items-start justify-between mb-4">
+            <span class="font-mono text-accent text-xs font-bold">
+                @Project.Index
             </span>
-        }
+            <span class="font-mono text-muted text-xs">
+                @Project.Year
+            </span>
+        </div>
+        
+        <h3 class="font-display font-bold -tracking-[0.02em] text-lg text-white mb-3 uppercase">
+            @Project.Name
+        </h3>
+        
+        <p class="font-mono text-muted text-xs leading-relaxed mb-5">
+            @Project.Summary
+        </p>
+        
+        <div class="flex flex-wrap gap-2 mb-5">
+            @foreach (var tech in Project.Tech)
+            {
+                <span class="font-mono border border-border-subtle text-muted px-2 py-0.5 text-[0.65rem] tracking-widest uppercase">
+                    @tech
+                </span>
+            }
+        </div>
     </div>
     
-    <div class="card-actions">
-        <a href="@Project.Live" class="link-primary">
+    <div class="flex gap-4 pt-2">
+        <a href="@Project.Live" class="font-mono text-xs uppercase tracking-wider text-accent no-underline hover:underline">
             [ LIVE DEMO ]
         </a>
-        <a href="@Project.Github" class="link-secondary">
+        <a href="@Project.Github" class="font-mono text-xs uppercase tracking-wider text-muted no-underline transition-colors duration-150 hover:text-white">
             [ GITHUB ]
         </a>
     </div>
