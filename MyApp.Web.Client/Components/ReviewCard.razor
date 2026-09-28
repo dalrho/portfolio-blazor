@@ -1,0 +1,108 @@
+@using MyApp.Web.Client.Models
+
+<div class="border border-border-subtle bg-surface p-6 transition-all duration-150 hover:border-accent/60 flex flex-col justify-between">
+    <div>
+        <!-- Top row: Avatar & Author info + Rating Stars -->
+        <div class="flex items-start justify-between gap-4 mb-4">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 border border-border-subtle bg-surface-alt flex items-center justify-center font-mono text-xs font-bold text-accent">
+                    @GetInitials(Review.Author)
+                </div>
+                <div>
+                    <div class="font-display font-bold text-sm text-white uppercase tracking-tight">
+                        @Review.Author
+                    </div>
+                    <div class="font-mono text-[0.7rem] text-muted">
+                        @Review.Role
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex flex-col items-end">
+                <StarRating Value="@Review.Rating" ReadOnly="true" Size="sm" ShowScoreText="false" ShowScaleButtons="false" />
+                <span class="font-mono text-[0.65rem] text-muted mt-1">@Review.Date</span>
+            </div>
+        </div>
+
+        <!-- Tag / Category badge -->
+        <div class="mb-3">
+            <span class="font-mono border border-border-subtle bg-canvas text-accent px-2 py-0.5 text-[0.65rem] tracking-[0.1em] uppercase">
+                @Review.Category
+            </span>
+        </div>
+
+        <!-- Title -->
+        <h4 class="font-display font-bold text-base text-white uppercase mb-2">
+            @Review.Title
+        </h4>
+
+        <!-- Comment -->
+        <p class="font-mono text-muted text-xs leading-[1.7] mb-5 whitespace-pre-line">
+            @Review.Comment
+        </p>
+    </div>
+
+    <!-- Bottom Action Bar: Helpful reaction -->
+    <div class="flex items-center justify-between pt-3 border-t border-border-subtle">
+        <span class="font-mono text-[0.65rem] text-dim">
+            ID: #@Review.Id
+        </span>
+
+        <button type="button"
+                @onclick="HandleUpvote"
+                class="font-mono text-[0.7rem] uppercase tracking-wider px-3 py-1 border transition-all duration-150 cursor-pointer @(hasUpvoted ? "border-accent bg-accent/10 text-accent font-bold" : "border-border-subtle bg-transparent text-muted hover:border-white hover:text-white")">
+            ▲ Helpful (@upvoteCount)
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public ReviewItem Review { get; set; } = default!;
+
+    [Parameter]
+    public EventCallback<string> OnUpvote { get; set; }
+
+    private int upvoteCount;
+    private bool hasUpvoted = false;
+
+    protected override void OnInitialized()
+    {
+        upvoteCount = Review.Upvotes;
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (!hasUpvoted)
+        {
+            upvoteCount = Review.Upvotes;
+        }
+    }
+
+    private async Task HandleUpvote()
+    {
+        if (hasUpvoted)
+        {
+            upvoteCount--;
+            hasUpvoted = false;
+        }
+        else
+        {
+            upvoteCount++;
+            hasUpvoted = true;
+        }
+
+        if (OnUpvote.HasDelegate)
+        {
+            await OnUpvote.InvokeAsync(Review.Id);
+        }
+    }
+
+    private static string GetInitials(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name)) return "??";
+        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 1) return parts[0].Length >= 2 ? parts[0][..2].ToUpperInvariant() : parts[0].ToUpperInvariant();
+        return $"{parts[0][0]}{parts[^1][0]}".ToUpperInvariant();
+    }
+}
