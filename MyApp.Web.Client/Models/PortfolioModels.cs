@@ -37,3 +37,25 @@ public record SocialLink(
     string Handle,
     string Url
 );
+
+public record ReviewItem(
+    string Id,
+    string Author,
+    string Role,
+    int Rating,
+    string Title,
+    string Comment,
+    string Date,
+    string Category,
+    int Upvotes = 0
+);
+
+public class ReviewSubmissionModel
+{
+    public string Name { get; set; } = string.Empty;
+    public string Role { get; set; } = string.Empty;
+    public int Rating { get; set; } = 5;
+    public string Title { get; set; } = string.Empty;
+    public string Comment { get; set; } = string.Empty;
+    public string Category { get; set; } = "Portfolio UX";
+}
