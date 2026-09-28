@@ -10,12 +10,12 @@
         <button @onclick="@(() => NavigateTo("home"))" class="font-display text-sm font-bold tracking-[0.1em] text-white bg-transparent border-none cursor-pointer uppercase transition-colors duration-150 hover:text-accent">
             AK
         </button>
-        <div class="flex items-center gap-8">
+        <div class="flex items-center gap-6 lg:gap-8">
             @foreach (var p in Pages)
             {
                 <button @onclick="@(() => NavigateTo(p))"
                         class="font-mono text-xs tracking-[0.1em] uppercase bg-transparent border-none cursor-pointer transition-colors duration-150 @(currentPage == p ? "text-accent" : "text-muted hover:text-white")">
-                    [ @(p == "about" ? "ABOUT" : p.ToUpperInvariant()) ]
+                    [ @(p == "about" ? "ABOUT" : p == "reviews" ? "REVIEWS" : p.ToUpperInvariant()) ]
                 </button>
             }
         </div>
@@ -40,9 +40,14 @@
                         <p class="font-mono text-muted max-w-[52ch] text-sm leading-[1.7] mb-12 anim-3">
                             Full-stack engineer &amp; AI researcher. I build systems that feel inevitable — fast, legible, and obsessively considered. Based in San Francisco.
                         </p>
-                        <button @onclick="@(() => NavigateTo("work"))" class="font-mono border border-accent bg-accent text-canvas px-8 py-3.5 text-xs tracking-[0.15em] font-bold cursor-pointer uppercase inline-block transition-colors duration-150 hover:bg-canvas hover:text-accent anim-4">
-                            [ VIEW WORK ]
-                        </button>
+                        <div class="flex flex-wrap gap-4 anim-4">
+                            <button @onclick="@(() => NavigateTo("work"))" class="font-mono border border-accent bg-accent text-canvas px-8 py-3.5 text-xs tracking-[0.15em] font-bold cursor-pointer uppercase inline-block transition-colors duration-150 hover:bg-canvas hover:text-accent">
+                                [ VIEW WORK ]
+                            </button>
+                            <button @onclick="@(() => NavigateTo("reviews"))" class="font-mono border border-border-subtle bg-surface text-white px-8 py-3.5 text-xs tracking-[0.15em] font-bold cursor-pointer uppercase inline-block transition-colors duration-150 hover:border-accent hover:text-accent">
+                                [ RATE &amp; REVIEW ★ ]
+                            </button>
+                        </div>
                     </div>
                 </section>
 
@@ -291,12 +296,255 @@
                 </section>
             </div>
         }
+        else if (currentPage == "reviews")
+        {
+            <div class="anim-fade">
+                <!-- Reviews Header & Stats Overview -->
+                <section class="relative px-8 pt-20 pb-12 lg:px-16 border-b border-border-subtle overflow-hidden">
+                    <div class="font-display text-border-subtle text-[clamp(6rem,20vw,18rem)] leading-none absolute top-12 -right-[0.02em] select-none font-extrabold -tracking-[0.04em] pointer-events-none">04</div>
+                    <p class="font-mono text-muted text-xs uppercase tracking-[0.15em] mb-8 anim-1">04 / REVIEWS &amp; RATINGS</p>
+                    <h1 class="font-display font-extrabold -tracking-[0.03em] text-[clamp(2.5rem,5vw,3.75rem)] text-white uppercase mb-4 anim-2">
+                        PEER RATINGS &amp;<br />
+                        <span class="text-accent">FEEDBACK</span> LOG
+                    </h1>
+                    <p class="font-mono text-muted max-w-[60ch] text-xs leading-[1.7] mb-10 anim-3">
+                        Interactive review and rating terminal. Rate portfolio craft, project engineering, or leave a critique below.
+                    </p>
+
+                    <!-- Score Metrics Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-border-subtle anim-4">
+                        <!-- Metric 1: Average Rating -->
+                        <div class="border border-border-subtle bg-surface p-6">
+                            <div class="flex items-baseline gap-3">
+                                <span class="font-display font-extrabold text-4xl text-white">@AverageRating.ToString("0.0")</span>
+                                <span class="font-mono text-xs text-muted">/ 5.0 SCORE</span>
+                            </div>
+                            <div class="mt-3 flex items-center gap-2">
+                                <div class="flex text-accent">
+                                    @for (int s = 1; s <= 5; s++)
+                                    {
+                                        var isLit = s <= (int)Math.Round(AverageRating);
+                                        <svg class="w-4 h-4 @(isLit ? "fill-accent text-accent" : "fill-none text-dim")" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                        </svg>
+                                    }
+                                </div>
+                                <span class="font-mono text-xs text-muted">(@reviewsList.Count Total Reviews)</span>
+                            </div>
+                        </div>
+
+                        <!-- Metric 2: Rating Distribution Bar -->
+                        <div class="border border-border-subtle bg-surface p-6 flex flex-col justify-center gap-1.5">
+                            @for (int r = 5; r >= 1; r--)
+                            {
+                                var starNum = r;
+                                var count = reviewsList.Count(x => x.Rating == starNum);
+                                var pct = reviewsList.Count > 0 ? (count * 100) / reviewsList.Count : 0;
+                                <div class="flex items-center gap-2 font-mono text-[0.65rem]">
+                                    <span class="w-6 text-muted">@starNum ★</span>
+                                    <div class="flex-1 h-1.5 bg-canvas overflow-hidden border border-border-subtle">
+                                        <div class="h-full bg-accent transition-all duration-300" style="width: @pct%"></div>
+                                    </div>
+                                    <span class="w-8 text-right text-dim">@count</span>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Metric 3: Positive Sentiment -->
+                        <div class="border border-border-subtle bg-surface p-6 flex flex-col justify-between">
+                            <div>
+                                <div class="font-mono text-muted text-xs uppercase tracking-wider mb-1">RECOMMENDATION RATE</div>
+                                <div class="font-display font-extrabold text-3xl text-accent">@PositiveSentimentPercent%</div>
+                            </div>
+                            <div class="font-mono text-[0.7rem] text-muted">
+                                @reviewsList.Count(r => r.Rating >= 4) out of @reviewsList.Count reviewers rated 4 or 5 stars.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Two Column Layout: Rating Form + Reviews Feed -->
+                <section class="px-8 py-16 lg:px-16 anim-5">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+                        
+                        <!-- Left Column: Interactive Review Submission Form (5 cols) -->
+                        <div class="lg:col-span-5">
+                            <div class="sticky top-20">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h2 class="font-display font-bold -tracking-[0.02em] text-xl uppercase text-white">SUBMIT A REVIEW</h2>
+                                    <span class="font-mono text-[0.65rem] border border-accent/40 bg-accent/10 text-accent px-2 py-0.5 uppercase tracking-wider font-semibold">
+                                        LIVE INTERACTIVE
+                                    </span>
+                                </div>
+                                <p class="font-mono text-muted text-xs uppercase tracking-[0.12em] mb-8">
+                                    Select a rating scale &amp; write your feedback
+                                </p>
+
+                                @if (isReviewSubmitted)
+                                {
+                                    <!-- Thank You / Success State Banner -->
+                                    <div class="border border-accent bg-surface p-8 anim-fade">
+                                        <div class="flex items-center gap-3 text-accent mb-4">
+                                            <div class="w-8 h-8 rounded-full border border-accent bg-accent/20 flex items-center justify-center font-bold text-lg">
+                                                ✓
+                                            </div>
+                                            <span class="font-display font-bold text-lg text-white uppercase">
+                                                THANK YOU FOR YOUR REVIEW!
+                                            </span>
+                                        </div>
+                                        <p class="font-mono text-muted text-xs leading-relaxed mb-6">
+                                            Your feedback has been recorded and instantly appended to the public review stream on the right.
+                                        </p>
+                                        
+                                        <!-- Mini preview card of submission -->
+                                        @if (lastSubmittedReview != null)
+                                        {
+                                            <div class="border border-border-subtle bg-canvas p-4 mb-6">
+                                                <div class="flex justify-between items-center mb-2">
+                                                    <span class="font-mono text-xs font-bold text-white uppercase">@lastSubmittedReview.Author</span>
+                                                    <StarRating Value="@lastSubmittedReview.Rating" ReadOnly="true" Size="sm" ShowScoreText="false" ShowScaleButtons="false" />
+                                                </div>
+                                                <div class="font-mono text-[0.7rem] text-accent mb-1 uppercase font-semibold">“@lastSubmittedReview.Title”</div>
+                                                <div class="font-mono text-[0.7rem] text-muted line-clamp-2">@lastSubmittedReview.Comment</div>
+                                            </div>
+                                        }
+
+                                        <button type="button"
+                                                @onclick="ResetReviewForm"
+                                                class="font-mono border border-accent bg-accent text-canvas px-6 py-3 text-xs tracking-[0.15em] font-bold cursor-pointer uppercase w-full block transition-colors duration-150 hover:bg-canvas hover:text-accent">
+                                            [ + WRITE ANOTHER REVIEW ]
+                                        </button>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <!-- Review Submission Form -->
+                                    <EditForm Model="@reviewForm" OnValidSubmit="HandleReviewSubmit" class="space-y-5">
+                                        <!-- Core Feature 1: Interactive Rating Input (Stars + Number Scale) -->
+                                        <div class="border border-border-subtle bg-surface p-5">
+                                            <label class="block font-mono text-accent text-xs uppercase tracking-[0.12em] font-bold mb-3">
+                                                ★ INTERACTIVE RATING SCALE (1 - 5)
+                                            </label>
+                                            <StarRating @bind-Value="reviewForm.Rating" Size="md" ShowScoreText="true" ShowScaleButtons="true" />
+                                        </div>
+
+                                        <!-- Category Selector -->
+                                        <div>
+                                            <label class="block font-mono text-muted text-xs uppercase tracking-[0.1em] mb-2">TOPIC CATEGORY</label>
+                                            <div class="flex flex-wrap gap-2">
+                                                @foreach (var cat in reviewCategories)
+                                                {
+                                                    <button type="button"
+                                                            @onclick="() => reviewForm.Category = cat"
+                                                            class="font-mono text-[0.65rem] px-3 py-1.5 border transition-all duration-150 cursor-pointer uppercase tracking-wider @(reviewForm.Category == cat ? "border-accent bg-accent text-canvas font-bold" : "border-border-subtle bg-surface text-muted hover:border-white hover:text-white")">
+                                                        @cat
+                                                    </button>
+                                                }
+                                            </div>
+                                        </div>
+
+                                        <!-- Reviewer Name -->
+                                        <div>
+                                            <label class="block font-mono text-muted text-xs uppercase tracking-[0.1em] mb-2">
+                                                YOUR_NAME / HANDLE <span class="text-accent">*</span>
+                                            </label>
+                                            <InputText @bind-Value="reviewForm.Name" required placeholder="e.g. Maya Lin" class="font-mono bg-surface border border-border-subtle text-white px-4 py-3 text-sm w-full outline-none transition-colors duration-150 focus:border-accent placeholder:text-dim" />
+                                        </div>
+
+                                        <!-- Reviewer Role -->
+                                        <div>
+                                            <label class="block font-mono text-muted text-xs uppercase tracking-[0.1em] mb-2">
+                                                ROLE / COMPANY (OPTIONAL)
+                                            </label>
+                                            <InputText @bind-Value="reviewForm.Role" placeholder="e.g. Product Designer at Linear" class="font-mono bg-surface border border-border-subtle text-white px-4 py-3 text-sm w-full outline-none transition-colors duration-150 focus:border-accent placeholder:text-dim" />
+                                        </div>
+
+                                        <!-- Review Headline / Title -->
+                                        <div>
+                                            <label class="block font-mono text-muted text-xs uppercase tracking-[0.1em] mb-2">
+                                                REVIEW_TITLE / HEADLINE <span class="text-accent">*</span>
+                                            </label>
+                                            <InputText @bind-Value="reviewForm.Title" required placeholder="e.g. Exceptional typography and fast interactions" class="font-mono bg-surface border border-border-subtle text-white px-4 py-3 text-sm w-full outline-none transition-colors duration-150 focus:border-accent placeholder:text-dim" />
+                                        </div>
+
+                                        <!-- Core Feature 2: Review Comment Textarea -->
+                                        <div>
+                                            <div class="flex justify-between items-center mb-2">
+                                                <label class="block font-mono text-muted text-xs uppercase tracking-[0.1em]">
+                                                    COMMENT / DETAILED_REVIEW <span class="text-accent">*</span>
+                                                </label>
+                                                <span class="font-mono text-[0.65rem] text-dim">
+                                                    @(reviewForm.Comment?.Length ?? 0) chars
+                                                </span>
+                                            </div>
+                                            <InputTextArea @bind-Value="reviewForm.Comment" required rows="4" placeholder="Write your constructive feedback, observations on UX, code architecture, or overall impressions..." class="font-mono bg-surface border border-border-subtle text-white px-4 py-3 text-sm w-full outline-none transition-colors duration-150 focus:border-accent placeholder:text-dim min-h-[110px] resize-y" />
+                                        </div>
+
+                                        <!-- Submit Button -->
+                                        <button type="submit" class="font-mono border border-accent bg-accent text-canvas px-8 py-3.5 text-xs tracking-[0.15em] font-bold cursor-pointer uppercase w-full block transition-all duration-150 hover:bg-canvas hover:text-accent hover:shadow-[0_0_20px_rgba(184,255,0,0.2)]">
+                                            [ TRANSMIT REVIEW ➔ ]
+                                        </button>
+                                    </EditForm>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Live Community Reviews Stream (7 cols) -->
+                        <div class="lg:col-span-7">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                                <div>
+                                    <h3 class="font-display font-bold -tracking-[0.02em] text-xl uppercase text-white">
+                                        COMMUNITY REVIEWS (@FilteredReviewsCount)
+                                    </h3>
+                                    <p class="font-mono text-muted text-xs mt-1">
+                                        Showing latest community feedback and ratings
+                                    </p>
+                                </div>
+
+                                <!-- Star Filter Buttons -->
+                                <div class="flex flex-wrap gap-2">
+                                    @foreach (var filterOption in ratingFilters)
+                                    {
+                                        <button type="button"
+                                                @onclick="() => selectedRatingFilter = filterOption"
+                                                class="font-mono text-[0.65rem] px-3 py-1.5 border transition-all duration-150 cursor-pointer uppercase tracking-wider @(selectedRatingFilter == filterOption ? "border-accent bg-accent text-canvas font-bold" : "border-border-subtle bg-surface text-muted hover:border-white hover:text-white")">
+                                            @filterOption
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- Review Cards List -->
+                            <div class="space-y-4">
+                                @{
+                                    var displayReviews = GetFilteredReviews().ToList();
+                                }
+                                @if (displayReviews.Count == 0)
+                                {
+                                    <div class="border border-border-subtle bg-surface p-12 text-center font-mono text-muted text-xs">
+                                        No reviews found matching the filter "@selectedRatingFilter". Be the first to leave one!
+                                    </div>
+                                }
+                                else
+                                {
+                                    @foreach (var review in displayReviews)
+                                    {
+                                        <ReviewCard Review="@review" />
+                                    }
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+            </div>
+        }
     </main>
 </div>
 
 @code {
     private string currentPage = "home";
-    private readonly string[] Pages = ["home", "work", "about"];
+    private readonly string[] Pages = ["home", "work", "about", "reviews"];
     private string currentFilter = "ALL";
     private readonly string[] filters = ["ALL", "FULL-STACK", "AI/ML", "UI/UX"];
 
@@ -313,6 +561,113 @@
 
     private readonly ContactFormModel contactForm = new();
     private bool isSent = false;
+
+    // --- Reviews & Rating State ---
+    private readonly ReviewSubmissionModel reviewForm = new();
+    private bool isReviewSubmitted = false;
+    private ReviewItem? lastSubmittedReview = null;
+    private string selectedRatingFilter = "ALL";
+    private readonly string[] ratingFilters = ["ALL", "5 STARS", "4 STARS", "3 STARS", "1-2 STARS"];
+    private readonly string[] reviewCategories = ["Portfolio UX", "Code Quality", "Meridian Project", "Spectra UI", "General Feedback"];
+
+    private readonly List<ReviewItem> reviewsList =
+    [
+        new(
+            "REV-01",
+            "Sophia Vance",
+            "Principal Designer @ Monolith",
+            5,
+            "Masterclass in Brutalist Typography & Speed",
+            "The micro-interactions, dark aesthetic, and sharp typography hierarchy make this portfolio stand out immensely. The WASM-based audio project Hollow was especially mindblowing.",
+            "2 days ago",
+            "Portfolio UX",
+            14
+        ),
+        new(
+            "REV-02",
+            "David Chen",
+            "Staff Systems Architect @ Cloudflare",
+            5,
+            "Outstanding Systems Architecture & Real-Time Polish",
+            "Reviewed the Meridian platform telemetry pipeline — handling 2M+ daily events with sub-50ms latency using Rust + ClickHouse is pristine engineering craft. Exceptional work.",
+            "4 days ago",
+            "Code Quality",
+            19
+        ),
+        new(
+            "REV-03",
+            "Elena Rostova",
+            "Senior Frontend Engineer",
+            4,
+            "Clean Design System with Spectra UI",
+            "Spectra UI shows deep care for developer experience and design token scalability. Very responsive components and clean layout tokens throughout.",
+            "1 week ago",
+            "Spectra UI",
+            8
+        ),
+        new(
+            "REV-04",
+            "Marcus Brody",
+            "Open Source Contributor",
+            5,
+            "Incredible Attention to Detail",
+            "From the custom CRT noise texture to the tactile hover responses, this is one of the highest craft portfolios I've browsed this year.",
+            "2 weeks ago",
+            "General Feedback",
+            11
+        )
+    ];
+
+    private double AverageRating => reviewsList.Count > 0 ? reviewsList.Average(r => r.Rating) : 5.0;
+    private int PositiveSentimentPercent => reviewsList.Count > 0 ? (reviewsList.Count(r => r.Rating >= 4) * 100) / reviewsList.Count : 100;
+    private int FilteredReviewsCount => GetFilteredReviews().Count();
+
+    private IEnumerable<ReviewItem> GetFilteredReviews()
+    {
+        return selectedRatingFilter switch
+        {
+            "5 STARS" => reviewsList.Where(r => r.Rating == 5),
+            "4 STARS" => reviewsList.Where(r => r.Rating == 4),
+            "3 STARS" => reviewsList.Where(r => r.Rating == 3),
+            "1-2 STARS" => reviewsList.Where(r => r.Rating <= 2),
+            _ => reviewsList
+        };
+    }
+
+    private void HandleReviewSubmit()
+    {
+        if (string.IsNullOrWhiteSpace(reviewForm.Name) || string.IsNullOrWhiteSpace(reviewForm.Comment))
+        {
+            return;
+        }
+
+        var newReview = new ReviewItem(
+            $"REV-0{reviewsList.Count + 1}",
+            reviewForm.Name.Trim(),
+            string.IsNullOrWhiteSpace(reviewForm.Role) ? "Visitor / Peer Reviewer" : reviewForm.Role.Trim(),
+            Math.Clamp(reviewForm.Rating, 1, 5),
+            string.IsNullOrWhiteSpace(reviewForm.Title) ? "Portfolio Feedback" : reviewForm.Title.Trim(),
+            reviewForm.Comment.Trim(),
+            "Just now",
+            reviewForm.Category,
+            1
+        );
+
+        reviewsList.Insert(0, newReview);
+        lastSubmittedReview = newReview;
+        isReviewSubmitted = true;
+    }
+
+    private void ResetReviewForm()
+    {
+        reviewForm.Name = string.Empty;
+        reviewForm.Role = string.Empty;
+        reviewForm.Rating = 5;
+        reviewForm.Title = string.Empty;
+        reviewForm.Comment = string.Empty;
+        reviewForm.Category = "Portfolio UX";
+        isReviewSubmitted = false;
+    }
 
     private async Task NavigateTo(string page)
     {
