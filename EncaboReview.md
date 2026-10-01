@@ -4,11 +4,9 @@
 
 ## 📑 Table of Contents
 
-* [Project 1: AK Portfolio (`portfolio-blazor`)](#-project-1-ak-portfolio-portfolio-blazor)
+* [AK Portfolio (`portfolio-blazor`)](#-project-1-ak-portfolio-portfolio-blazor)
   * [1. Project Structure Rating](#1-project-structure-rating)
   * [2. Front-End Rating](#2-front-end-rating)
-* [Project 2: TBD](#-project-2-tbd)
-* [Git Workflow Templates](#-git-workflow-templates)
 
 ---
 
