@@ -253,6 +253,60 @@ public class ContactFormModel
 }
 
 /// <summary>
+/// Form model bound to the review / endorsement submission form on UI.
+/// </summary>
+public class ReviewSubmissionModel
+{
+    public string Name { get; set; } = string.Empty;
+    public string Author { get => Name; set => Name = value; }
+    public string Role { get; set; } = string.Empty;
+    public int Rating { get; set; } = 5;
+    public string Category { get; set; } = "Portfolio UX";
+    public string Title { get; set; } = string.Empty;
+    public string Comment { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// Community endorsement / peer review item for the portfolio guestbook.
+/// </summary>
+public class ReviewItem : AuditableEntity
+{
+    public new string Id { get; set; } = string.Empty;
+    public string Author { get; set; } = string.Empty;
+    public string Role { get; set; } = string.Empty;
+    public int Rating { get; set; } = 5;
+    public string Title { get; set; } = string.Empty;
+    public string Comment { get; set; } = string.Empty;
+    public string Date { get; set; } = string.Empty;
+    public string Category { get; set; } = "General Feedback";
+    public int Upvotes { get; set; }
+
+    public ReviewItem() { }
+
+    public ReviewItem(
+        string id,
+        string author,
+        string role,
+        int rating,
+        string title,
+        string comment,
+        string date,
+        string category,
+        int upvotes)
+    {
+        Id = id;
+        Author = author;
+        Role = role;
+        Rating = rating;
+        Title = title;
+        Comment = comment;
+        Date = date;
+        Category = category;
+        Upvotes = upvotes;
+    }
+}
+
+/// <summary>
 /// Persisted contact message sent through the website terminal.
 /// </summary>
 public class ContactMessage : AuditableEntity

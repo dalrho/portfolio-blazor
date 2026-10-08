@@ -1,0 +1,114 @@
+<div class="flex flex-col gap-2">
+    <div class="flex items-center gap-1.5 select-none">
+        @for (int i = 1; i <= MaxStars; i++)
+        {
+            var starIndex = i;
+            var isFilled = starIndex <= (hoveredRating > 0 ? hoveredRating : Value);
+            
+            <button type="button"
+                    disabled="@ReadOnly"
+                    @onclick="() => SelectRating(starIndex)"
+                    @onmouseenter="() => OnMouseEnter(starIndex)"
+                    @onmouseleave="OnMouseLeave"
+                    aria-label="@($"Rate {starIndex} out of {MaxStars} stars")"
+                    class="p-1 bg-transparent border-0 @(ReadOnly ? "cursor-default" : "cursor-pointer transition-transform duration-100 hover:scale-110 active:scale-95") focus:outline-none focus-visible:ring-1 focus-visible:ring-accent">
+                <svg class="@GetSizeClass() transition-colors duration-150 @(isFilled ? "text-accent fill-accent" : "text-dim fill-none")"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor"
+                     stroke-width="1.75"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>
+            </button>
+        }
+
+        @if (!ReadOnly && ShowScaleButtons)
+        {
+            <div class="flex items-center gap-1.5 ml-3 border-l border-border-subtle pl-3">
+                @for (int n = 1; n <= MaxStars; n++)
+                {
+                    var num = n;
+                    <button type="button"
+                            @onclick="() => SelectRating(num)"
+                            class="font-mono text-xs px-2.5 py-1 border transition-all duration-150 cursor-pointer @(Value == num ? "border-accent bg-accent text-canvas font-bold shadow-[0_0_12px_rgba(184,255,0,0.3)]" : "border-border-subtle bg-surface text-muted hover:border-white hover:text-white")">
+                        @num
+                    </button>
+                }
+            </div>
+        }
+    </div>
+
+    @if (ShowScoreText)
+    {
+        <div class="flex items-center gap-2 font-mono text-xs">
+            <span class="text-accent font-bold">
+                @(hoveredRating > 0 ? hoveredRating : Value).0 / @MaxStars.0
+            </span>
+            <span class="text-muted">
+                — @GetRatingDescription(hoveredRating > 0 ? hoveredRating : Value)
+            </span>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Value { get; set; } = 5;
+
+    [Parameter]
+    public EventCallback<int> ValueChanged { get; set; }
+
+    [Parameter]
+    public bool ReadOnly { get; set; } = false;
+
+    [Parameter]
+    public int MaxStars { get; set; } = 5;
+
+    [Parameter]
+    public string Size { get; set; } = "md"; // sm, md, lg
+
+    [Parameter]
+    public bool ShowScoreText { get; set; } = true;
+
+    [Parameter]
+    public bool ShowScaleButtons { get; set; } = true;
+
+    private int hoveredRating = 0;
+
+    private async Task SelectRating(int rating)
+    {
+        if (ReadOnly) return;
+        Value = rating;
+        await ValueChanged.InvokeAsync(Value);
+    }
+
+    private void OnMouseEnter(int rating)
+    {
+        if (ReadOnly) return;
+        hoveredRating = rating;
+    }
+
+    private void OnMouseLeave()
+    {
+        if (ReadOnly) return;
+        hoveredRating = 0;
+    }
+
+    private string GetSizeClass() => Size switch
+    {
+        "sm" => "w-4 h-4",
+        "lg" => "w-7 h-7",
+        _ => "w-5 h-5"
+    };
+
+    private static string GetRatingDescription(int rating) => rating switch
+    {
+        5 => "Outstanding / Exceptional Quality",
+        4 => "Very Good / High Quality",
+        3 => "Good / Meets Expectations",
+        2 => "Fair / Needs Improvement",
+        1 => "Poor / Critical Revisions Needed",
+        _ => "Select a rating"
+    };
+}
